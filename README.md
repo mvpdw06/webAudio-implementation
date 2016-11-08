@@ -1,7 +1,7 @@
 # webAudio-implementation
 Try Web Audio API with React.
 
-## Inspiring from my friend([shiningjason1989](https://github.com/shiningjason1989))
+## Inspiring from my friend([shiningjason1989](https://github.com/shiningjason1989))'s sharing
 
 [2016/11/02 前端魔法師 Meetup - I want to be a web guitar player](https://speakerdeck.com/shiningjason1989/i-want-to-be-a-web-guitar-player)
 
@@ -23,7 +23,7 @@ Try Web Audio API with React.
 - [ ] reDesign app layout
 - [ ] refactor
 
-## What's we want to goal?
+## What's I want to goal?
 
 :notes: + :globe_with_meridians: = :metal:
 
