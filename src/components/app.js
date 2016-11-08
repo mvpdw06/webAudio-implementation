@@ -9,6 +9,11 @@ var sourceNode = null;
 export default class App extends React.Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			startedAt: 0,
+			pausedAt: 0,
+			playing:false,
+		}
 	}
 	componentDidMount() {
 		fetch('lonelypatient.mp3')
@@ -16,9 +21,6 @@ export default class App extends React.Component {
 			.then((fileBuffer) => {
 				context.decodeAudioData(fileBuffer, (audioData) => {
 					this.setState({
-						startedAt: 0,
-						pausedAt: 0,
-						playing:false,
 						buffer: audioData,
 					});
 				});
@@ -26,35 +28,44 @@ export default class App extends React.Component {
 			});
 	}
 	_clickToRock() {
+		const { playing } = this.state;
+
+		if(playing) {
+			this._clickToPause();
+		}
+		else {
+			this._clickToPlay();
+		}
+	}
+	_clickToPlay() {
+		console.log('rock play');
+
 		const {
-			playing,
 			pausedAt,
-			startedAt,
 			buffer
 		} = this.state;
 
-		if(playing) {
-			console.log('rock pause');
-			let elapsed = context.currentTime - startedAt;
-	        this._clickToStop();
-	        this.setState({
-	        	pausedAt: elapsed
-	        })
-		}
-		else {
-			console.log('rock play');
-			let offset = pausedAt;
-	        sourceNode = context.createBufferSource();
-	        sourceNode.connect(context.destination);
-	        sourceNode.buffer = buffer;
-	        sourceNode.start(0, offset);
+		let offset = pausedAt;
+        sourceNode = context.createBufferSource();
+        sourceNode.connect(context.destination);
+        sourceNode.buffer = buffer;
+        sourceNode.start(0, offset);
 
-			this.setState({
-				startedAt: context.currentTime - offset,
-	        	pausedAt: 0,
-	        	playing: true,
-			});
-		}
+		this.setState({
+			startedAt: context.currentTime - offset,
+        	pausedAt: 0,
+        	playing: true,
+		});
+	}
+	_clickToPause() {
+		console.log('rock pause');
+		const { startedAt } = this.state;
+
+		let elapsed = context.currentTime - startedAt;
+        this._clickToStop();
+        this.setState({
+        	pausedAt: elapsed
+        })
 	}
 	_clickToStop() {
 		console.log('stop');
@@ -71,11 +82,12 @@ export default class App extends React.Component {
         });
 	}
 	render() {
+		let playOutcome = this.state.playing ? 'Pause' : 'Play';
 		return (
 			<div>
 				<Title>Let's rock!</Title>
-				<Button onClick={this._clickToRock.bind(this)}>{'Rock'}</Button>
-				<Button primary onClick={this._clickToStop.bind(this)}>Stop!</Button>
+				<Button onClick={this._clickToRock.bind(this)}>{playOutcome}</Button>
+				<Button primary onClick={this._clickToStop.bind(this)}>Stop</Button>
 				<Paint></Paint>
 			</div>
 		);
